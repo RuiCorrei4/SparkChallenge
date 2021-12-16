@@ -26,26 +26,3 @@ object App {
   }
 
 }
-
-   /* val customSchema = StructType(Array(
-      StructField("App", StringType, true),
-      StructField("Average_Sentiment_Polarity", DoubleType, true))
-      )
-
-    val df_1 = spark.read.format("csv")
-      .option("delimiter"," ").option("quote","")
-      .option("header", "true")
-      .schema(customSchema)
-      .load("/home/ruicorreia/Documents/Spark/google-play-store-apps/googleplaystore_user_reviews.csv")*/
-
-   /* val data = spark.sparkContext.parallelize(Seq("Hello World", "This is some text", "Hello text"))
-
-    val map = data.flatMap(e => e.split(" ")).map(word => (word, 1))
-
-    val counts = map.reduceByKey(_ + _).repartition(1)
-
-    //saves rdd
-    counts.saveAsTextFile("wordcount")*/
-
-    //saves a df as a csv file   
-    df_1.write.csv("best_apps.csv")
