@@ -73,3 +73,7 @@ target/classes/com/spark/App.scala
 .metals/readonly/dependencies/src.zip/java/lang/Thread.java
 .metals/readonly/dependencies/src.zip/java/time/format/DateTimeFormatter.java
 .metals/readonly/dependencies/src.zip/java/util/concurrent/ThreadPoolExecutor.java
+.metals/metals.h2.db
+.metals/metals.lock.db
+.metals/metals.log
+.metals/readonly/dependencies/spark-catalyst_2.12-3.2.0-sources.jar/org/apache/spark/sql/catalyst/expressions/package.scala
