@@ -4,10 +4,6 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions._
-import org.apache.avro.data.Json
-
-
-
 
 /**
  * @author ${user.name}
@@ -15,7 +11,7 @@ import org.apache.avro.data.Json
 object App {
   
   def main(args : Array[String]) {
-    System.out.println("hahahaah")
+
     //creats conection to the spark "server"
     val spark = SparkSession.builder()
       .master( master = "local[*]")
@@ -46,6 +42,7 @@ object App {
       .csv("/home/ruicorreia/Documents/Spark/google-play-store-apps/googleplaystore.csv")
       .withColumn("Genres", split(col("Genres"), ";").cast("array<string>"))
       .withColumn("Reviews", col("Reviews").cast("long"))
+      .withColumn("Rating", col("Rating").cast("double"))
       .withColumn("Price", regexp_replace(col("Price"), "\\$", "").cast("double")*0.9)
       .withColumn("Size", regexp_replace(col("Size"), "M", "000000000"))
       .withColumn("Size", regexp_replace(col("Size"), "\\.", "").cast("double"))
@@ -66,10 +63,15 @@ object App {
       df_3.printSchema()
 
       //parte 4
-      df_3.join(df_1,df_3("App") === df_1("App")).drop(df_1.col("App")) 
-      .coalesce(1).write.format("parquet").option("codec", "org.apache.hadoop.io.compress.GzipCodec").mode("append").save("googleplaystore_cleaned.parquet")
+     var df_0 = df_3.join(df_1,df_3("App") === df_1("App")).drop(df_1.col("App")) 
+      df_0.coalesce(1).write.format("parquet").option("codec", "org.apache.hadoop.io.compress.GzipCodec").mode("append").save("googleplaystore_cleaned.parquet")
 
       //part5
+      var df_4 = df_0
+        .withColumn( "Genre",explode(col("Genres")))
+        .groupBy("Genre").agg(avg(col("Rating")).as("Average_Rating"), count("Genre").as("Count"), avg(col("Average_Sentiment_Polarity").cast("double")).as("Average_Sentiment_Polarity"))
+      df_4.show()
+      df_4.coalesce(1).write.format("parquet").option("codec", "org.apache.hadoop.io.compress.GzipCodec").mode("append").save("googleplaystore_metrics.parquet")
 
   }
 }
