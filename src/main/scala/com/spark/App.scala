@@ -15,7 +15,7 @@ import org.apache.avro.data.Json
 object App {
   
   def main(args : Array[String]) {
-    
+    System.out.println("hahahaah")
     //creats conection to the spark "server"
     val spark = SparkSession.builder()
       .master( master = "local[*]")
@@ -66,6 +66,10 @@ object App {
       df_3.printSchema()
 
       //parte 4
+      df_3.join(df_1,df_3("App") === df_1("App")).drop(df_1.col("App")) 
+      .coalesce(1).write.format("parquet").option("codec", "org.apache.hadoop.io.compress.GzipCodec").mode("append").save("googleplaystore_cleaned.parquet")
+
+      //part5
 
   }
 }
